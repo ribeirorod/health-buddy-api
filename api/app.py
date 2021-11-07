@@ -1,7 +1,7 @@
 from flask import Flask, session, jsonify, request
 from functools import wraps
 from flask_pymongo import PyMongo
-from models import BlacklistToken, User, auth_blueprint
+from models import User, auth_blueprint
 
 app = Flask(__name__)
 app.secret_key = b'X\x8aW\xa8\x18z\xba\r\xe53Y\xeb\xc7e\x89{'

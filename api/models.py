@@ -5,7 +5,9 @@ from flask.views import MethodView
 from passlib.hash import pbkdf2_sha256
 from datetime import datetime, timedelta
 
+
 auth_blueprint = Blueprint('auth_blueprint', __name__)
+
 
 class BlacklistToken:
     """
@@ -53,7 +55,7 @@ class User:
         """
         try:
             payload = {
-                'exp': datetime.utcnow() + timedelta(days=0, seconds=600),
+                'exp': datetime.utcnow() + timedelta(days=0, minutes=30),
                 'iat': datetime.utcnow(),
                 'sub': user['_id']
             }
@@ -66,7 +68,7 @@ class User:
             return e
 
     @staticmethod
-    def decode_auth_token(auth_token, key):
+    def decode_auth_token(auth_token, key, db):
         """
         Validates the auth token
         :param auth_token:
@@ -74,15 +76,15 @@ class User:
         """
         try:
             payload = jwt.decode(auth_token, key, algorithms=["HS256"])
-            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
+            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token, db)
             if is_blacklisted_token:
                 return 'Token blacklisted. Please log in again.'
             else:
                 return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            return  401
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
+            return 402
 
     def start_session(self):
         print('inside session')
@@ -183,6 +185,7 @@ class User:
             }
         return make_response(jsonify(responseObject)), 401
 
+from app import db, app 
 class UserAPI(MethodView):
     """
     User Resource
@@ -202,14 +205,16 @@ class UserAPI(MethodView):
         else:
             auth_token = ''
         if auth_token:
-            resp = User.decode_auth_token(auth_token)
-            if not isinstance(resp, str):
+            resp = User.decode_auth_token(auth_token, app.config['SECRET_KEY'], db)
+            print(resp)
+            if isinstance(resp, str):
                 user = db.users.find_one({'_id': resp})
+                print(user)
                 responseObject = {
                     'status': 'success',
                     'data': {
                         "_id":      user['_id'],
-                        "name":     user['fullname'],
+                        "name":     user['name'],
                         "username": user['username'],
                         "email":    user['email']    }
                 }
@@ -242,7 +247,7 @@ class LogoutAPI(MethodView):
             if not isinstance(resp, str):
                 try:
                     # mark the token as blacklisted
-                    BlacklistToken(token=auth_token)
+                    BlacklistToken(token=auth_token).insert(db)
                     responseObject = {
                         'status': 'success',
                         'message': 'Successfully logged out.'
