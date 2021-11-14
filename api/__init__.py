@@ -1,30 +1,25 @@
-# backend/api/__init__.py
+from flask import Flask, jsonify
 from flask_pymongo import PyMongo
-from flask import Flask
-import models
-from api.auth.views import auth_blueprint
-
-app = Flask(__name__)
-app.secret_key = b'X\x8aW\xa8\x18z\xba\r\xe53Y\xeb\xc7e\x89{'
-app.config['MONGO_DBNAME'] = "corpus"
-app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/corpus"
-mongo = PyMongo(app)
-db = mongo.db
-
-@app.route('/api')
-def home():
-    return "This is an example app"
-
-app.register_blueprint(auth_blueprint)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+#from flask_restx import Api
 
 
 
-    
-    
+def create_app(env=None):
+    from api.config import config_by_name
+    #from api.routes import register_routes
 
+    app = Flask(__name__)
+    app.config.from_object(config_by_name[env or "test"])
+    mongo = PyMongo(app)
+    db = mongo.db
 
+    #api = Api(app, title="Flaskerific API", version="0.1.0")
 
+    register_routes(app)
+    #db.init_app(app)
 
+    @app.route("/health")
+    def health():
+        return jsonify("healthy")
+
+    return app

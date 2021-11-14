@@ -60,3 +60,6 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+"""
+curl localhost:5000/auth/login -d '{"identity": "rodtest", "password":"12345"}' -H 'Content-Type: application/json'
+"""
