@@ -8,6 +8,7 @@
 
 - [ ] Define user model schema
 
+```
 {
   id : uuid.str,
   created_at: timestamp,
@@ -17,6 +18,9 @@
   birthday: str ,
   password: str
 }
+```
+
+
 
 #### 1.  Registration | Signup Method
 
@@ -49,6 +53,7 @@
 
 ## Routes
 
+```
 'POST' /user/signup
 'GET' /user/login
 'GET' /user/logout
@@ -60,6 +65,9 @@
 'POST' /create/meal
 'GET' /food
 'GET'/product
+```
+
+
 
 ## Data sources
 
