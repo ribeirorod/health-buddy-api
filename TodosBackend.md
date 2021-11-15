@@ -76,7 +76,8 @@
   - Possible Data Sources:
   - https://github.com/openfoodfacts/openfoodfacts-python (API)
   - http://product-open-data.com/download (Direct download)
-  - https://ibnreg.org/
+  - https://ibnreg.org/ (EUROPE)
+  - https://fdc.nal.usda.gov/download-datasets.html (USDA Food and Brand Products db)
 
 
 - Internal MongoDB collections setup
@@ -110,5 +111,5 @@
 
 ### 2. Search Input
 
-  - [ ] FtEnd sends GET request based on user input ({type: "1", body: "banana"})
-  - [ ] As requests are processed based on every key stroke, API responds with top 10 results
+- [ ] FtEnd sends GET request based on user input ({type: "1", body: "banana"})
+- [ ] As requests are processed based on every key stroke, API responds with top 10 results
