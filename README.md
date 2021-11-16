@@ -22,9 +22,8 @@ mongod --config /usr/local/etc/mongod.conf --fork
 ```
 ---
 Linux
----
+
 Windows
----
 
 #### Flask (Instalation and Setup)
 
