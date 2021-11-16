@@ -29,5 +29,11 @@ Windows
 
 #### Sending requests from Terminal (examples)
 
+Routes
+
+```
+# /auth/login body = {"identity": "username/email", password = "********"}
+curl localhost:5000/auth/login -d '{"identity": "rodtest", "password":"12345"}' -H 'Content-Type: application/json'
+```
 
 
