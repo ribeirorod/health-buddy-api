@@ -12,7 +12,11 @@ __pycache__
 
 #databases
 database.db
-.json
+*.json
+*.csv
+*.xls
+*.xlsx
+
 
 # testing
 /coverage
