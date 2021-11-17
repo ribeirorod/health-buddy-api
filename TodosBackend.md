@@ -27,7 +27,7 @@
 - [x] define uuid for '\_id'
 - [x] encode password before persist on db
 - [x] validate duplicity, check existing username and email 
-- [ ] Generate token → Initiate session → Persist response
+- [x] Generate token → Initiate session → Persist response
 
 #### 2.  Login Method
 
@@ -54,9 +54,9 @@
 ## Routes
 
 ```
-'POST' /user/signup
-'GET' /user/login
-'GET' /user/logout
+'POST' /auth/signup
+'GET' /auth/login
+'GET' /auth/logout
 'POST' /user/track
 'POST' /user/favorite
 'GET' /user/favorite

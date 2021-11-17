@@ -4,7 +4,7 @@
 
 #### Installing Mongo Client
 
-MacOS 
+##### 	1. MacOS 
 
 ```
 brew tap mongodb/brew
@@ -20,20 +20,20 @@ brew services stop mongodb-community@5.0
 mongod --config /usr/local/etc/mongod.conf --fork
 
 ```
----
-Linux
+##### 	2. Linux
 
-Windows
+```
+
+```
+
 
 #### Flask (Instalation and Setup)
 
 #### Sending requests from Terminal (examples)
 
-Routes
-
+**/auth/login/**
 ```
 # /auth/login body = {"identity": "username/email", password = "********"}
 curl localhost:5000/auth/login -d '{"identity": "rodtest", "password":"12345"}' -H 'Content-Type: application/json'
 ```
-
 
