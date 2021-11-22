@@ -37,3 +37,9 @@ mongod --config /usr/local/etc/mongod.conf --fork
 curl localhost:5000/auth/login -d '{"identity": "rodtest", "password":"12345"}' -H 'Content-Type: application/json'
 ```
 
+curl -v localhost:5000/get/food -d '{"search": "cracker"}'
+
+
+curl -iX GET localhost:5000/food?search=whey&pro -H 'Content-Type: application/json'
+
+curl -iX GET localhost:5000/food -d '{"search": "whey pro"}' -H 'Content-Type: application/json'

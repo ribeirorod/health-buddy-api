@@ -1,4 +1,4 @@
-from flask import Flask, session, jsonify, request
+from flask import Flask, session, jsonify, request, make_response
 from functools import wraps
 from flask_pymongo import PyMongo
 from models import User, auth_blueprint
@@ -38,6 +38,36 @@ def signup():
 @app.route('/auth/login', methods=['POST'])
 def login():
   return User(key=app.secret_key, db=db).login()
+
+
+import re
+from bson import ObjectId
+
+@app.route('/food',methods= ['GET'])
+def food():
+  response = []
+  search = request.args.get('search')
+  if isinstance(search, str):
+      query = '.+'.join(search.split())
+      # for s in search.split():
+      #   query =  f'(?=.*?\{s}\b)'
+      print(query)
+      cursor= list(db.data.find({'description':\
+        {"$regex":re.compile(query, re.IGNORECASE)}},\
+          {'_id':True, 'description':True }, max_time_ms=1000, limit=20))
+
+      for item in cursor:
+        item['_id'] = str(item['_id'])
+        response.append(item)
+
+      return make_response(
+        jsonify({
+          "ok" : 1, 
+          "data": response})), 201   
+  else:
+    return None
+
+#projection={'_id': True}
 
 # '/auth/status' '/auth/logout/'
 app.register_blueprint(auth_blueprint)
