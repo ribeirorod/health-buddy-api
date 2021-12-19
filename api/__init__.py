@@ -1,25 +1,36 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask
 from flask_pymongo import PyMongo
-#from flask_restx import Api
+from api.config import config_by_name
 
+mongo = PyMongo()
 
+def create_app(test_config=None, env="dev"):
 
-def create_app(env=None):
-    from api.config import config_by_name
-    #from api.routes import register_routes
-
-    app = Flask(__name__)
+    """Initialize the core application."""
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_by_name[env or "test"])
-    mongo = PyMongo(app)
-    db = mongo.db
 
-    #api = Api(app, title="Flaskerific API", version="0.1.0")
+    # initialize DB
+    mongo.init_app(app)
 
-    register_routes(app)
-    #db.init_app(app)
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
-    @app.route("/health")
-    def health():
-        return jsonify("healthy")
+    @app.route("/hello")
+    def hello():
+        return "Hello, World!"
+
+    with app.app_context():
+        # Include our Routes
+        from . import models
+
+        # Register Blueprints
+        from . import auth, food
+        app.register_blueprint(auth.bp)
+        app.register_blueprint(food.bp)
 
     return app
