@@ -1,0 +1,122 @@
+// Select the database to use.
+// use('mongodbVSCodePlaygroundDB');
+use("corpus");
+// Requires official MongoShell 3.6+
+
+db = db.getSiblingDB("corpus");
+
+//  db.sample.aggregate([
+//   { $match: { fdcId: 1106312 } },
+//   {
+//     $addFields: {
+//       foodNutrients: {
+//         $arrayToObject: {
+//           $map: {
+//             input: "$foodNutrients",
+//             as: "el",
+//             in: {
+//               k: { $toString: "$$el._id" },
+//               v: {
+//                 nutrient_name: "$$el.nutrient_name",
+//                 nutrient_amount: "$$el.nutrient_amount",
+//                 nutrient_unit: "$$el.nutrient_unit",
+//               },
+//             },
+//           },
+//         },
+//       },
+//     },
+//   },
+//   //{$merge: { into: "sample", on: "_id", whenMatched: "replace",  whenNotMatched: "insert" }}
+// ]);
+
+//
+
+db.sample.updateOne({ fdcId: 1106864 }, [
+  {
+    $set: {
+      foodNutrients: {
+        $arrayToObject: {
+          $map: {
+            input: "$foodNutrients",
+            as: "el",
+            in: {
+              k: { $toString: "$$el.nutrient.id" },
+              v: {
+                nutrient_name: "$$el.nutrient.name",
+                nutrient_amount: "$$el.amount",
+                nutrient_unit: "$$el.nutrient.unitName",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    $set: {
+      ingredients: { $split: [{ $toLower: "$ingredients" }, ","] },
+      publicationDate: {
+        $dateFromString: { dateString: "$publicationDate", format: "%m/%d/%Y" },
+      },
+    },
+  },
+  { $addFields: { labelNutrients: { $objectToArray: "$labelNutrients" } } },
+  {
+    $addFields: {
+      labelNutrients: {
+        $arrayToObject: {
+          $map: {
+            input: "$labelNutrients",
+            as: "el",
+            in: {
+              k: { $toString: "$$el.k" },
+              v: "$$el.v.value",
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    $project: {
+      foodClass: false,
+      foodAttributes: false,
+      modifiedDate: false,
+      availableDate: false,
+      dataSource: false,
+      dataType: false,
+      foodUpdateLog: false,
+    },
+  },
+]);
+
+db.sample.update(
+  {},
+  {
+    $rename: {
+      servingSize: "weight_gram",
+      brandedFoodCategory: "category_description",
+      foodNutrients: "nutrients",
+      labelNutrients: "label_nutrients",
+    },
+  },
+  {
+    multi: true,
+  }
+);
+
+db.sample.update(
+  {},
+  {
+    $rename: {
+      servingSize: "weight_gram",
+      brandedFoodCategory: "category_description",
+      foodNutrients: "nutrients",
+      labelNutrients: "label_nutrients",
+    },
+  },
+  {
+    multi: true,
+  }
+);
