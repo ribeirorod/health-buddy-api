@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 #venv
-.env
+*.env
+*.flaskenv
 env
 venv
 temp
@@ -24,6 +25,7 @@ database.db
 
 # testing
 /coverage
+.VSCode*
 
 # production
 /build
