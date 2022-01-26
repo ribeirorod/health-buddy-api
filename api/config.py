@@ -13,7 +13,7 @@ class DevelopmentConfig(BaseConfig):
     ENV = "development"
     DEVELOPMENT = True
     CONFIG_NAME = "dev"
-    SECRET_KEY = b'X\x8aW\xa8\x18z\xba\r\xe53Y\xeb\xc7e\x89{' #os.environ.get("SECRET_KEY")
+    SECRET_KEY = os.environ.get("DEV_SECRET_KEY")
     DEBUG = True
     MONGO_DBNAME = "corpus"
     MONGO_URI = "mongodb://127.0.0.1:27017/corpus"

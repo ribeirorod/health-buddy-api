@@ -11,18 +11,14 @@ def create_app(test_config=None, env="dev"):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_by_name[env or "test"])
 
-    # initialize DB
+    # initialize MongoDB
     mongo.init_app(app)
 
-    # ensure the instance folder exists
+    # ensures the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
 
     with app.app_context():
         # Include our Routes
