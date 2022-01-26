@@ -7,13 +7,16 @@ bp = Blueprint("food", __name__, url_prefix="/food")
 
 @bp.route('/food',methods= ['GET'])
 def food():
+  """
+  Searches DB for Food products, must accomodate:
+    Case insensitive 
+    Typos (hash map string)
+    Unordered search
+  """
   response = []
   search = request.args.get('search')
   if isinstance(search, str):
       query = '.+'.join(search.split())
-      # for s in search.split():
-      #   query =  f'(?=.*?\{s}\b)'
-      print(query)
       cursor= list(mongo.food.find({'description':\
         {"$regex":re.compile(query, re.IGNORECASE)}},\
           {'_id':True, 'description':True }, max_time_ms=1000, limit=20))
